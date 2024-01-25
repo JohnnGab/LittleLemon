@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Booking, Menu
-from serializers import MenuSerializer, BookingSerializer
+from .serializers import MenuSerializer, BookingSerializer
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.decorators import permission_classes
+
 
 def index(request):
     return render(request, 'index.html', {})
@@ -15,7 +17,7 @@ class MenuItemsView(generics.ListCreateAPIView):
     def get_permissions(self):
         permission_classes = []
         if self.request.method != 'Get':
-            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
         
         return [permission() for permission in permission_classes]
     
@@ -26,7 +28,7 @@ class SingleMenuItemView(generics.RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         permission_classes = []
         if self.request.method != 'Get':
-            permission_classes = [IsAuthenticated]
+            permission_classes = [IsAdminUser]
         
         return [permission() for permission in permission_classes]
 
